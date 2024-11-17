@@ -7,7 +7,7 @@ from aiogram.types import (CallbackQuery, Message)
 from aiogram.utils.chat_action import ChatActionSender
 from create_bot import bot
 from data_base.queries import get_tenant_id
-from keyboards.all_kb import remove_state_kb
+from keyboards.all_kb import remove_state_kb, main_menu_keyboard
 from utils.http_queries import (get_image_from_doorphone,
                                 get_tenants_apartments, get_tenants_doorphones,
                                 open_door)
@@ -108,7 +108,10 @@ async def doorphone_form_capture_doorphone(message: Message, state: FSMContext):
     await state.update_data(doorphone=actual_doorphones[number - 1][0])
     open_door_message = open_door(tenant_id, actual_doorphones[number - 1][0], 0)
     if open_door_message:
-        await message.answer(text=f"Домофон «{actual_doorphones[number - 1][1]}» успешно открыт")
+        await message.answer(
+            text=f"Домофон «{actual_doorphones[number - 1][1]}» успешно открыт",
+            reply_markup=main_menu_keyboard(message.from_user.id)
+        )
     else:
         await message.answer(text="Ошибка при открытии домофона")
     await state.clear()
@@ -165,11 +168,20 @@ async def camera_form_capture_doorphone(message: Message, state: FSMContext):
     get_camera_image_url = get_image_from_doorphone(tenant_id, [doorphone_id], ["JPEG"])
     try:
         if get_camera_image_url:
-            await message.answer_photo(photo=get_camera_image_url)
+            await message.answer_photo(
+                photo=get_camera_image_url,
+                reply_markup=main_menu_keyboard(message.from_user.id)
+            )
         else:
-            await message.answer(text="Ошибка при открытии домофона")
+            await message.answer(
+                text="Ошибка при открытии домофона",
+                reply_markup=main_menu_keyboard(message.from_user.id)
+            )
     except Exception:
-        await message.answer(text="Ошибка при получении изображения. Возможно, камера не работает")
+        await message.answer(
+            text="Ошибка при получении изображения. Возможно, камера не работает",
+            reply_markup=main_menu_keyboard(message.from_user.id)
+        )
     await state.clear()
 
 
@@ -184,7 +196,8 @@ async def open_doorphone_on_endpoint(call: CallbackQuery):
     _, domofon_id, tenant_id = call.data.split(":")
     result = open_door(tenant_id, domofon_id, 0)
     if result:
-        await bot.send_message(call.from_user.id, "Домофон успешно открыт!")
+        await bot.send_message(call.from_user.id, "Домофон успешно открыт!",
+                               reply_markup=main_menu_keyboard(call.from_user.id))
         await call.message.edit_reply_markup(reply_markup=None)
     else:
         await bot.send_message(call.from_user.id, "Ошибка при открытии домофона")
@@ -192,4 +205,4 @@ async def open_doorphone_on_endpoint(call: CallbackQuery):
 
 @router.message()
 async def wrong_command(message: Message):
-    await message.answer(text="Введена неправильная команда")
+    await message.answer(text="Введена неправильная команда", reply_markup=main_menu_keyboard(message.from_user.id))

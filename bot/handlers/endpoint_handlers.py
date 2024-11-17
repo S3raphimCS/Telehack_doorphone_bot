@@ -22,11 +22,14 @@ async def doorbell_handler(request):
                     for i in doorphones:
                         if domofon_id in i:
                             check = 1
+                            doorphone_name = i[1]
+                            apartment_name = apartment[1]
                             break
                 if check:
+
                     await bot.send_message(
                         user_id,
-                        "Вам поступил звонок в домофон",
+                        f"Вам поступил звонок в домофон «{doorphone_name}» по адресу {apartment_name}",
                     )
                     image_url = get_image_from_doorphone(tenant_id, [domofon_id], ["JPEG"])
                     if image_url:
