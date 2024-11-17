@@ -1,53 +1,54 @@
 version: '3.9'
 
 services:
-  api:
-    build: .
-    environment:
-      WORKERS: ${WORKERS:-2}
-      THREADS: ${THREADS:-2}
-    command: make migrate run.server.prod
-    ports:
-      - "${API_PORT}:80"
-    depends_on:
-      - pgbouncer
-      - migrations
-      - collectstatic
-      - redis
-    restart: always
-    volumes:
-      - .:/application
-    networks:
-      - main
-
-  bot:
-    build: .
-    command: make run.bot.prod
-    depends_on:
-      - api
-    restart: always
-    volumes:
-      - .:/application
-    networks:
-      - main
-
   db:
     image: postgres:latest
+    container_name: pgdb
     restart: unless-stopped
     env_file:
       - .env
     environment:
       POSTGRES_INITDB_ARGS: --auth=md5
+      POSTGRES_DB: doorphone_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: 192.168.34.102
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
     networks:
-      - main
+      bot-network:
+          ipv4_address: 192.168.34.102
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+
+  bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: telegram_bot
+    restart: always
+    env_file: 
+      - .env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./bot:/app
+    ports:
+      - '8000:8000'
+    networks:
+        bot-network:
+          ipv4_address: 192.168.34.45
 
   pgbouncer:
     image: edoburu/pgbouncer:latest
+    container_name: pgbouncer
     restart: unless-stopped
     depends_on:
       - db
+    env_file: 
+      - .env
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - POOL_MODE=transaction
@@ -66,54 +67,28 @@ services:
     volumes:
       - pgbouncer-data:/var/lib/pgbouncer
     networks:
-      - main
-
+      bot-network:
+          ipv4_address: 192.168.34.30
+  
   redis:
     image: redis:latest
+    container_name: redis
     restart: unless-stopped
     volumes:
       - redis-data:/data
     networks:
-      - main
+      bot-network:
+          ipv4_address: 192.168.34.4
 
-  celery:
-    build: .
-    command: make run.celery.prod
-    restart: unless-stopped
-    depends_on:
-      - api
-    volumes:
-      - .:/application
-    networks:
-      - main
-
-  migrations:
-    build: .
-    command: make migrate
-    depends_on:
-      - db
-    volumes:
-      - .:/application
-    networks:
-      - main
-
-  collectstatic:
-    build: .
-    command: make collectstatic
-    depends_on:
-      - db
-    volumes:
-      - .:/application
-    networks:
-      - main
 
 networks:
-  main:
+  bot-network:
+    driver: bridge
     ipam:
-      driver: default
+      config:
+        - subnet: 192.168.34.0/24
 
 volumes:
   postgres-data:
   pgbouncer-data:
   redis-data:
-  rabbitmq-data:
