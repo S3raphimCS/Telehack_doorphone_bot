@@ -13,8 +13,8 @@
 - Python 3.11 ![Python](https://img.shields.io/badge/Python-3.11.0-yellow?logo=python)
 - Redis  ![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?&style=for-the-badge&logo=redis&logoColor=white)
 - Aiogram 3.12 ![Aiogram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)
-- PostgreSQL ![Static Badge](https://img.shields.io/badge/Postgres-16.0-lightgrey?logo=postgresql)
-- Docker ![Static Badge](https://img.shields.io/badge/Docker-3.8-blue?logo=docker)
+- PostgreSQL ![Static Badge](https://img.shields.io/badge/Postgres-latest-lightgrey?logo=postgresql)
+- Docker ![Static Badge](https://img.shields.io/badge/Docker-3.9-blue?logo=docker)
 
 
 ## Настройки проекта
@@ -41,7 +41,7 @@
    `python3.11 -m venv venv`
 2) Активировать виртуальное окружение:
    `. venv/bin/activate` для Linux или `.\venv\Scripts\activate` для Windows
-3) Установить зависимости для проекта `pip install -r src/requirements.txt`
+3) Установить зависимости для проекта `pip install -r requirements.txt`
 
 4) Заполнить содержимое файла .env по примеру в .env.example
 5) Развернуть базу данных, redis и бота `sudo docker-compose -f docker-compose.yml up` или подключить локально службы, параллельно запустив `aiogram_run.py`
