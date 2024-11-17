@@ -5,9 +5,9 @@
 ### Состав команды:
 1) <a href="https://github.com/S3raphimCS">Задонский Сергей Сергеевич (капитан)</a>
 2) <a href="https://github.com/Merkucios">Медведев Андрей Владимирович</a>
-3) <a href="">Коваль Илья Валерьевич</a>
+3) <a href="https://github.com/Dissonanccee">Коваль Илья Валерьевич</a>
 4) <a href="https://github.com/ogenwp">Гагарин Егор Кириллович</a>
-5) <a href="">Оришака Владислав Александрович</a>
+5) <a href="https://github.com/B1a4c">Оришака Владислав Александрович</a>
 
 ### Стек используемых технологий:  
 - Python ![Python](https://img.shields.io/badge/Python-3.12.4-yellow?logo=python)
