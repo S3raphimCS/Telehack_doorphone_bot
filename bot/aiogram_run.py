@@ -2,10 +2,11 @@ import nest_asyncio
 from aiogram.webhook.aiohttp_server import (SimpleRequestHandler,
                                             setup_application)
 from aiohttp import web
+from decouple import config
+
 from bot_stop import stop_bot
 from create_bot import admins, bot, dp, logger
 from data_base.base import create_tables
-from decouple import config
 from handlers.contact import router as contact_router
 from handlers.endpoint_handlers import doorbell_handler
 from handlers.start import router as start_router

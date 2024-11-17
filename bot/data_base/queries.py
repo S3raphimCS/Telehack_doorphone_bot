@@ -1,9 +1,10 @@
 from typing import Optional
 
-from create_bot import logger
 from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from create_bot import logger
 from utils.http_queries import get_user_tenant_id
 
 from .base import connection

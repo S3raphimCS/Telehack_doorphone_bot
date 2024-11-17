@@ -1,8 +1,9 @@
 from aiogram import F, Router
 from aiogram.types import Message, ReplyKeyboardRemove
-from data_base.queries import add_number_to_user, check_tenant
-from keyboards.all_kb import main_menu_keyboard
 
+from data_base.queries import add_number_to_user, check_tenant
+from handlers.tenant_logic import extract_number
+from keyboards.all_kb import main_menu_keyboard
 
 router = Router()
 
@@ -10,7 +11,8 @@ router = Router()
 @router.message(F.contact)
 async def get_contact(message: Message):
     contact = message.contact
-    phone_number = int(contact.phone_number[1:])
+    phone_number = extract_number(contact.phone_number)
+    print(phone_number)
     await add_number_to_user(message.from_user.id, phone_number)
     is_tenant = await check_tenant(phone_number)
     await message.answer(f"Спасибо, {contact.first_name}.\n"

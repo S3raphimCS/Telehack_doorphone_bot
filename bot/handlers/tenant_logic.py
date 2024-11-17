@@ -3,11 +3,12 @@ import re
 from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.types import (CallbackQuery, Message)
+from aiogram.types import CallbackQuery, Message
 from aiogram.utils.chat_action import ChatActionSender
+
 from create_bot import bot
 from data_base.queries import get_tenant_id
-from keyboards.all_kb import remove_state_kb, main_menu_keyboard
+from keyboards.all_kb import main_menu_keyboard, remove_state_kb
 from utils.http_queries import (get_image_from_doorphone,
                                 get_tenants_apartments, get_tenants_doorphones,
                                 open_door)
