@@ -182,3 +182,14 @@ async def camera_form_capture_doorphone(message: Message, state: FSMContext):
 async def remove_state(call: CallbackQuery, state: FSMContext):
     await state.clear()
     await call.message.delete()
+
+
+@router.callback_query(F.data.startswith("open_doorphone"))
+async def open_doorphone_on_endpoint(call: CallbackQuery):
+    _, domofon_id, tenant_id = call.data.split(":")
+    result = open_door(tenant_id, domofon_id, 0)
+    if result:
+        await bot.send_message(call.from_user.id, "Домофон успешно открыт!")
+        await call.message.edit_reply_markup(reply_markup=None)
+    else:
+        await bot.send_message(call.from_user.id, "Ошибка при открытии домофона")

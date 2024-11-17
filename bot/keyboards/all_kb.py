@@ -33,3 +33,11 @@ def remove_state_kb():
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
     return keyboard
+
+
+def open_door_kb_with_tenant_id_and_domofon_id(data):
+    kb_list = [
+        [InlineKeyboardButton(text="🔓Открыть домофон", callback_data=f"open_doorphone:{data[0]}:{data[1]}")],
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
+    return keyboard

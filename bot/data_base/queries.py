@@ -77,3 +77,12 @@ async def get_tenant_id(session: AsyncSession, tg_id: int) -> int | None:
         #     return None
     except SQLAlchemyError as err:
         logger.error(f"Ошибка при получении tenant_id пользователя: {err}")
+
+
+@connection
+async def get_tenant_id_by_user_id(session: AsyncSession, tenant_id: int):
+    try:
+        user = await session.scalar(select(User).filter_by(tenant_id=tenant_id))
+        return user.id
+    except SQLAlchemyError as err:
+        logger.error(f"Ошибка при получении user_id по tenant_id пользователя: {err}")

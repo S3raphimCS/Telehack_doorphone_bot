@@ -17,4 +17,5 @@ logger = logging.getLogger(__name__)
 storage = RedisStorage.from_url(config("REDIS_URL"))
 
 bot = Bot(token=config('TG_BOT_SECRET_KEY'), default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+
 dp = Dispatcher(storage=storage)

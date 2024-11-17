@@ -1,5 +1,3 @@
-import asyncio
-
 from bot_stop import stop_bot
 from create_bot import admins, bot, dp
 from data_base.base import create_tables
@@ -7,6 +5,14 @@ from handlers.start import router as start_router
 from handlers.contact import router as contact_router
 from handlers.tenant_logic import router as tenant_router
 from create_bot import logger
+from aiohttp import web
+from decouple import config
+from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
+import nest_asyncio
+from handlers.endpoint_handlers import doorbell_handler
+
+
+nest_asyncio.apply()
 
 
 async def start_bot():
@@ -16,9 +22,17 @@ async def start_bot():
             await bot.send_message(admin_id, 'Я запущен🥳')
         except Exception as err:
             logger.error("Ошибка рассылки сообщения админам при запуске: ", err)
+    await bot.delete_webhook(drop_pending_updates=True)
+
+    webhook_url = f'{config("BASE_URL")}/{config("TG_BOT_SECRET_KEY")}'
+    try:
+        await bot.set_webhook(webhook_url)
+        logger.info(f"Webhook set to {webhook_url}")
+    except Exception as e:
+        logger.info(f"Error setting webhook: {e}")
 
 
-async def main():
+def main():
     # Регистрация функций
     dp.startup.register(start_bot)
     dp.shutdown.register(stop_bot)
@@ -26,13 +40,16 @@ async def main():
     # Регистрация роутеров
     dp.include_routers(start_router, contact_router, tenant_router)
 
-    # Запуск бота в режиме long polling при запуске бот очищает все обновления, которые были за его моменты бездействия
-    try:
-        await bot.delete_webhook(drop_pending_updates=True)
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
-    finally:
-        await bot.session.close()
+    app = web.Application()
+    webhook_request_handler = SimpleRequestHandler(
+        dispatcher=dp,
+        bot=bot
+    )
+    webhook_request_handler.register(app, path=f'/{config("TG_BOT_SECRET_KEY")}')
+    app.router.add_route('*', f'/{config("TG_BOT_SECRET_KEY")}/notify-door', doorbell_handler)
+    setup_application(app, dp, bot=bot)
+    web.run_app(app, host=config("HOST"), port=int(config("PORT")))
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
