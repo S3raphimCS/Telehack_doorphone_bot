@@ -47,10 +47,11 @@ async def doorphones_list(message: Message):
     tenant_id = await get_tenant_id(message.from_user.id)
     answer = "У вас нет прав на получение данной информации"
     if tenant_id:
-        answer = 'Список доступных домофонов по адресам:\n\n'
+        answer = 'Список доступных домофонов по адресам:'
         tenants_apartments, doorphones = await get_doorphones_by_tenant_id(message)
         counter = 0
         for i in range(len(doorphones)):
+            answer += '\n\n'
             answer += f"{tenants_apartments[i][1]}:\n"
             for j in range(len(doorphones[i])):
                 counter += 1
@@ -121,7 +122,7 @@ async def start_get_camera_images_questionary(message: Message, state: FSMContex
             tenants_apartments, doorphones = await get_doorphones_by_tenant_id(message)
             answer = "Выберите адрес:\n"
             for i in range(len(tenants_apartments)):
-                answer += f"{i + 1}){tenants_apartments[i][1]}\n"
+                answer += f"{i + 1}) {tenants_apartments[i][1]}\n"
             await message.answer(text=answer, reply_markup=remove_state_kb())
         await state.set_state(CameraForm.address)
     else:
@@ -187,3 +188,8 @@ async def open_doorphone_on_endpoint(call: CallbackQuery):
         await call.message.edit_reply_markup(reply_markup=None)
     else:
         await bot.send_message(call.from_user.id, "Ошибка при открытии домофона")
+
+
+@router.message()
+async def wrong_command(message: Message):
+    await message.answer(text="Введена неправильная команда")
