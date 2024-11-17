@@ -1,12 +1,8 @@
-from aiogram import F, Router, types
-from aiogram.filters import Command
+from aiogram import F, Router
 from aiogram.types import Message, ReplyKeyboardRemove
-from create_bot import admins, bot
+from data_base.queries import add_number_to_user, check_tenant
+from keyboards.all_kb import main_menu_keyboard
 
-from keyboards.all_kb import start_kb, contact_keyboard, main_menu_keyboard
-from sqlalchemy.exc import SQLAlchemyError
-
-from data_base.queries import check_tenant, add_number_to_user
 
 router = Router()
 

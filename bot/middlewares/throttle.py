@@ -1,10 +1,11 @@
 from __future__ import annotations
+
+import time
 from typing import *
+
+import redis.asyncio.client
 from aiogram import BaseMiddleware
 from aiogram.types import Message
-import redis.asyncio.client
-import time
-
 from create_bot import logger
 
 

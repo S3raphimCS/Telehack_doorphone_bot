@@ -1,14 +1,19 @@
 from datetime import datetime
 
+from decouple import config
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import (AsyncAttrs, AsyncSession,
                                     async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from decouple import config
-
 engine = create_async_engine(
-    url=f"postgresql+asyncpg://{config('POSTGRES_USER')}:{config('POSTGRES_PASSWORD')}@{config('POSTGRES_HOST')}/{config('POSTGRES_DB')}")
+    url="postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}/{POSTGRES_DB}".format(
+        POSTGRES_USER=config('POSTGRES_USER'),
+        POSTGRES_PASSWORD=config('POSTGRES_PASSWORD'),
+        POSTGRES_HOST=config('POSTGRES_HOST'),
+        POSTGRES_DB=config('POSTGRES_DB')
+    )
+)
 async_session = async_sessionmaker(engine, class_=AsyncSession)
 
 

@@ -1,6 +1,4 @@
 from create_bot import admins, bot
-from decouple import config
-from create_bot import logger
 
 
 # Функция, которая выполнится когда бот завершит свою работу

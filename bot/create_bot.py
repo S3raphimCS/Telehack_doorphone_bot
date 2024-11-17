@@ -7,7 +7,6 @@ from aiogram.fsm.storage.redis import RedisStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from decouple import config
 
-
 scheduler = AsyncIOScheduler(timezone='Asia/Vladivostok')
 admins = [int(admin_id) for admin_id in config('ADMINS').split(',')]
 

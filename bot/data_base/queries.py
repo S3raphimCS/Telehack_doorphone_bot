@@ -1,20 +1,13 @@
-from typing import List, Optional, Tuple
+from typing import Optional
 
 from create_bot import logger
 from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
-
-from .base import connection, to_dict
-from .models import User
-
-from utils.http_queries import (
-    get_tenants_apartments,
-    get_user_tenant_id,
-    get_tenants_doorphones,
-    get_image_from_doorphone
-)
-
 from sqlalchemy.ext.asyncio import AsyncSession
+from utils.http_queries import get_user_tenant_id
+
+from .base import connection
+from .models import User
 
 
 @connection

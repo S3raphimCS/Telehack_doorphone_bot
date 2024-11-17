@@ -1,15 +1,8 @@
-from aiogram import F, Router
+from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
-from create_bot import admins, bot
-
-from keyboards.all_kb import start_kb, contact_keyboard
-from sqlalchemy.exc import SQLAlchemyError
-
 from data_base.queries import set_user
-from data_base.queries import check_tenant
-
-from middlewares.throttle import ThrottlingMiddleware
+from keyboards.all_kb import contact_keyboard
 
 
 router = Router()

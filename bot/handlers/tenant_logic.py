@@ -1,22 +1,16 @@
+import re
+
 from aiogram import F, Router
-from aiogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup, CallbackQuery
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from create_bot import admins, bot
-
-from data_base.queries import get_tenant_id, check_tenant
-from middlewares.throttle import ThrottlingMiddleware
-
-from utils.http_queries import get_tenants_doorphones, get_tenants_apartments, open_door, get_image_from_doorphone
-
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-
+from aiogram.types import (CallbackQuery, Message)
 from aiogram.utils.chat_action import ChatActionSender
-from aiogram.fsm.storage.base import StorageKey
-
+from create_bot import bot
+from data_base.queries import get_tenant_id
 from keyboards.all_kb import remove_state_kb
-
-import re
+from utils.http_queries import (get_image_from_doorphone,
+                                get_tenants_apartments, get_tenants_doorphones,
+                                open_door)
 
 router = Router()
 
@@ -173,7 +167,7 @@ async def camera_form_capture_doorphone(message: Message, state: FSMContext):
             await message.answer_photo(photo=get_camera_image_url)
         else:
             await message.answer(text="Ошибка при открытии домофона")
-    except Exception as excp:
+    except Exception:
         await message.answer(text="Ошибка при получении изображения. Возможно, камера не работает")
     await state.clear()
 

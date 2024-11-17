@@ -1,5 +1,6 @@
-from .database import Base, async_session, engine
 from sqlalchemy.orm import class_mapper
+
+from .database import Base, async_session, engine
 
 
 def connection(func):

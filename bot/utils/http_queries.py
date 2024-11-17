@@ -1,8 +1,8 @@
-import requests
 import json
-from decouple import config
 from typing import List
 
+import requests
+from decouple import config
 
 API_KEY_TYPE = config("API_KEY_TYPE")
 API_TOKEN = config("API_TOKEN")
@@ -89,12 +89,3 @@ def open_door(tenant_id: int, doorphone_id: int, door_id: int) -> str | None:
     if "detail" not in open_message:
         return open_message["msg"]
     return None
-
-
-if __name__ == "__main__":
-    # print(get_user_tenant_id("79241037379"))
-    # print(get_user_tenant_id("72241037379"))
-    # print(get_tenants_apartments(22069))
-    # print(get_tenants_doorphones(755, 22069))
-    # print(get_image_from_doorphone(22069, [20], ["JPEG"]))
-    print(open_door(22069, 20, 1488))

@@ -1,7 +1,6 @@
 import requests
 from decouple import config
 
-
 webhook_url = f"{config('BASE_URL')}/{config('TG_BOT_SECRET_KEY')}/notify-door"
 domofon_id = 20
 tenant_id = 22069

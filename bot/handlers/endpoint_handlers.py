@@ -1,8 +1,9 @@
+from aiohttp import web
 from create_bot import bot
 from data_base.queries import get_tenant_id_by_user_id
-from aiohttp import web
-from utils.http_queries import get_image_from_doorphone, get_tenants_apartments, get_tenants_doorphones
 from keyboards.all_kb import open_door_kb_with_tenant_id_and_domofon_id
+from utils.http_queries import (get_image_from_doorphone,
+                                get_tenants_apartments, get_tenants_doorphones)
 
 
 async def doorbell_handler(request):
@@ -43,7 +44,8 @@ async def doorbell_handler(request):
                 return web.Response(text="Отправил GET.")
             else:
                 return web.Response(
-                    text="Ошибка в запросе, возможно отсутствие одного из необходимых полей 'domofon_id' или 'tenant_id'",
+                    text="Ошибка в запросе, возможно отсутствие одного из необходимых полей "
+                         "'domofon_id' или 'tenant_id'",
                     status=400)
         elif request.method == 'POST':
             data = await request.json()
@@ -55,7 +57,8 @@ async def doorbell_handler(request):
                 return web.Response(text="Отправил POST.")
             else:
                 return web.Response(
-                    text="Ошибка в запросе, возможно отсутствие одного из необходимых полей 'domofon_id' или 'tenant_id'",
+                    text="Ошибка в запросе, возможно отсутствие одного из необходимых полей "
+                         "'domofon_id' или 'tenant_id'",
                     status=400)
         return web.Response(text="Invalid method. Only GET or POST is allowed.", status=405)
     except Exception as e:
